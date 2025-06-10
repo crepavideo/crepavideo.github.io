@@ -173,13 +173,8 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>
             Fine-tuning Video Diffusion Models (VDMs) at the user level to generate videos that reflect specific attributes of training data presents notable challenges, yet remains underexplored despite its practical importance. Meanwhile, recent work such as Representation Alignment (REPA) has shown promise in improving the convergence and quality of DiT-based image diffusion models by aligning, or assimilating, its internal hidden states with external pretrained visual features, suggesting its potential for VDM fine-tuning.
-          </p>
-          <p>
             In this work, we first propose a straightforward adaptation of REPA for VDMs and empirically show that, while effective for convergence, it is suboptimal in preserving semantic consistency across frames. To address this limitation, we introduce <i>Cross-frame Representation Alignment</i> (CREPA), a novel regularization technique that aligns hidden states of a frame with external features from neighboring frames.
-          </p>
-          <p>
             Empirical evaluations on large-scale VDMs, including CogVideoX-5B and Hunyuan Video, demonstrate that <span class="crepa">CREPA</span> improves both visual fidelity and cross-frame semantic coherence when fine-tuned with parameter-efficient methods such as LoRA. We further validate <span class="crepa"></span>CREPA</span> across diverse datasets with varying attributes, confirming its broad applicability.
           </p>
         </div>
