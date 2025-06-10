@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Cross-Frame Representation Alignment for Fine-Tuning Video Diffusion Models">
+  <meta name="keywords" content="CREPA, Video Diffusion Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CREPA</title>
+  <!-- <title>Cross-Frame Representation Alignment for Fine-Tuning Video Diffusion Models</title> -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    .results-carousel .item {
+      width: 100%;
+      margin: 0 auto; /* 중앙 정렬 */
+      overflow: hidden;
+      border: 1px solid #bbb;
+      border-radius: 10px;
+      padding: 0;
+      font-size: 0;
+      box-sizing: border-box; /* 테두리와 패딩을 포함한 크기 계산 */
+    }
+
+    .video-container video {
+      border-radius: 10px; /* 원하는 라운드 값으로 설정 */
+    }
+
+  </style>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Cross-Frame Representation Alignment for Fine-Tuning Video Diffusion Models</h1>
+          <div class="is-size-5 publication-authors">
+<!--             <span class="author-block">
+              <a href="#">Anonymous</a></span> -->
+              Supplementary Videos
+          </div>
+
+<!--           <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+            </div> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/crepa_videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h3 class="has-text-centered is-size-5 has-text-weight-bold has-text-info">
+        <span style="margin-right: 265px;">Vanilla</span>
+        <span style="margin-right: 220px;">REPA*</span>
+        <span>CREPA</span>
+      </h3>
+      <h3 class="subtitle has-text-centered is-size-6">
+        <span class="crepa">PROMPT:</span> <em>"A black and white animated scene unfolds with a steamboat on a serene river or canal, <strong style="color: #4285F4;"><b>surrounded by a dock-like structure and rocky shores.</b></strong> The boat emits dark smoke from two tall smokestacks as it moves, leaving a trail behind. As the steamboat accelerates, the smoke grows denser. <strong style="color: #EA4335;"><b>It eventually disappears from view</b></strong>, and <strong style="color: #34A853;"> <b>a character emerges from a nearby house-like structure, standing on a small pier</b></strong>, observing the surroundings in a simplistic, classic animation style."</em>
+      </h3>
+    </div>
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title has-text-centered is-size-3">Main Videos</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/hun_main1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cog_main2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cog_main3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Fine-tuning Video Diffusion Models (VDMs) at the user level to generate videos that reflect specific attributes of training data presents notable challenges, yet remains underexplored despite its practical importance. Meanwhile, recent work such as Representation Alignment (REPA) has shown promise in improving the convergence and quality of DiT-based image diffusion models by aligning, or assimilating, its internal hidden states with external pretrained visual features, suggesting its potential for VDM fine-tuning.
+          </p>
+          <p>
+            In this work, we first propose a straightforward adaptation of REPA for VDMs and empirically show that, while effective for convergence, it is suboptimal in preserving semantic consistency across frames. To address this limitation, we introduce <i>Cross-frame Representation Alignment</i> (CREPA), a novel regularization technique that aligns hidden states of a frame with external features from neighboring frames.
+          </p>
+          <p>
+            Empirical evaluations on large-scale VDMs, including CogVideoX-5B and Hunyuan Video, demonstrate that <span class="crepa">CREPA</span> improves both visual fidelity and cross-frame semantic coherence when fine-tuned with parameter-efficient methods such as LoRA. We further validate <span class="crepa"></span>CREPA</span> across diverse datasets with varying attributes, confirming its broad applicability.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Crush</h2> -->
+ 
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/finetrainers/crush-smol" class="hover-link">Crush <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/crush/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 10">
+          <video poster="" id="10" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/hun_main1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/crush/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-5">
+          <video poster="" id="5" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/crush/4.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Cakeify</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/finetrainers/cakeify-smol" class="hover-link">Cakeify <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cakeify/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cakeify/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-soap">
+          <video poster="" id="soap" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cakeify/soap.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cakeify/4.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+<!--         <div class="item item-coke">
+          <video poster="" id="coke" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cakeify/5.mp4"
+                    type="video/mp4">
+          </video>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Squish</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/finetrainers/squish-pika" class="hover-link">Squish <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/squish/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/squish/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/squish/3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-6">
+          <video poster="" id="6" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/squish/6.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Disney</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/Wild-Heart/Disney-VideoGeneration-Dataset" class="hover-link">Disney <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/disney/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/disney/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <!-- <div class="item item-4">
+          <video poster="" id="4" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/disney/3.mp4"
+                    type="video/mp4">
+          </video>
+        </div> -->
+        <div class="item item-5">
+          <video poster="" id="5" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/disney/4.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Tom and Jerry</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/Wild-Heart/Tom-and-Jerry-VideoGeneration-Dataset" class="hover-link">Tom and Jerry <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cog_main3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-7">
+          <video poster="" id="7" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/tom/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/tom/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <!-- <div class="item item-3">
+          <video poster="" id="3" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/tom/3.mp4"
+                    type="video/mp4">
+          </video>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">DL3DV</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://dl3dv-10k.github.io/DL3DV-10K/" class="hover-link">DL3DV <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 10">
+          <video poster="" id="10" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/cog_main2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/dl3dv/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-7">
+          <video poster="" id="7" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/dl3dv/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- <h2 class="title has-text-centered is-size-3">Scenes</h2> -->
+      <h2 class="title has-text-centered is-size-3">
+        <a href="https://huggingface.co/datasets/bigdata-pw/scenes" class="hover-link">Scenes <br> <span style="font-size: 18px;"><i>(Click to see the training data examples)</i></span></a>
+      </h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/scenes/1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/scenes/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/crepa_videos/scenes/5.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 공백 추가 -->
+<div style="height: 100px;"></div>
+
