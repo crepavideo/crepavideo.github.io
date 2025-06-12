@@ -479,14 +479,29 @@
   <div class="container is-max-desktop content">
     <h2 class="title has-text-centered">Method Overview</h2>
 
-    <h4>Background</h4>
+    <h4 style="margin-top: 2em; margin-bottom: 1em;">Background</h4>
     <p>
       Existing REPA aligns the hidden states of Image Diffusion Transformers with pretrained visual features, improving convergence and generation quality.
       When REPA is applied to Video Diffusion Models (VDMs) as REPA*, it performs frame-wise alignment but fails to maintain semantic consistency across frames.
       Due to the inherent nature of denoising autoencoders (DAEs), hidden states extracted from noisy inputs can vary stochastically across frames, leading to semantic misalignment between adjacent frames.
     </p>
+    
+    <h4 style="margin-top: 2em; margin-bottom: 1em;">Motivation from Empirical Observation</h4>
 
-    <h4>Core Idea of CREPA</h4>
+    <p>
+      The motivation for Cross-frame Representation Alignment (CREPA) stems from empirical observations regarding the behavior of hidden states in Video Diffusion Models (VDMs).
+      As shown in the figure below, we visualize the learned hidden states using CKNN-A (Continuous K-Nearest Neighbors Alignment) on pretrained feature manifolds.
+      Under REPA*, the hidden states exhibit stochastic drifts and fail to follow a smooth trajectory across frames.
+      In contrast, with CREPA, the hidden states more faithfully align with the pretrained feature manifold, leading to improved temporal semantic consistency and smoother cross-frame representations.
+      This empirical observation supports our design choice to explicitly align hidden states with neighboring frames during fine-tuning.
+    </p>
+    
+
+    <div class="has-text-centered">
+      <img src="./static/images/cknna_2.png" alt="CREPA Model Diagram" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 10px;">
+    </div>
+
+    <h4 style="margin-top: 2em; margin-bottom: 1em;">Core Idea of CREPA</h4>
     <p>
       CREPA explicitly aligns the hidden state of each frame with both its own pretrained feature and the features of adjacent frames.
       This encourages the hidden states to remain smooth and consistent along a temporal semantic manifold, improving cross-frame semantic consistency in generated videos.
@@ -496,7 +511,7 @@
       <img src="./static/images/model_4.png" alt="CREPA Model Diagram" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 10px;">
     </div>
 
-    <h4>Implementation</h4>
+    <h4 style="margin-top: 2em; margin-bottom: 1em;">Implementation</h4>
 
     <p>
       <b>REPA*</b>
@@ -512,7 +527,7 @@
     </ul>
 
     <p>
-      $$ L_{align} = - \mathbb{E}_{x_0, \epsilon, t} \left[ \sum_f \text{sim}(\bar{y}^f, h_\phi(h^f_t)) \right] $$
+      $$ \mathcal{L}_{align} = - \mathbb{E}_{x_0, \epsilon, t} \left[ \sum_f \text{sim}(\bar{y}^f, h_\phi(h^f_t)) \right] $$
     </p>
 
     <p>
@@ -520,7 +535,7 @@
     </p>
 
     <p>
-      $$ L = L_{score} + \lambda L_{align} $$
+      $$ \mathcal{L} = \mathcal{L}_{score} + \lambda \mathcal{L}_{align} $$
     </p>
 
     <p>
@@ -531,13 +546,13 @@
     </ul>
 
     <p>
-      $$ L_{align} = - \mathbb{E}_{x_0, \epsilon, t} \left[ \sum_f \left( \text{sim}(\bar{y}^f, h_\phi(h^f_t)) + \sum_{k \in K} e^{-\frac{|k-f|}{\tau}} \cdot \text{sim}(\bar{y}^k, h_\phi(h^f_t)) \right) \right] $$
+      $$ \mathcal{L}_{align} = - \mathbb{E}_{x_0, \epsilon, t} \left[ \sum_f \left( \text{sim}(\bar{y}^f, h_\phi(h^f_t)) + \sum_{k \in K} e^{-\frac{|k-f|}{\tau}} \cdot \text{sim}(\bar{y}^k, h_\phi(h^f_t)) \right) \right] $$
     </p>
 
-    <h4>Key Features</h4>
+    <h4 style="margin-top: 2em; margin-bottom: 0.1em;">Key Features</h4>
     <ul style="display: inline-block; text-align: left;">
       <li>Simple and effective distillation-based regularization</li>
-      <li>Improves both <b>cross-frame semantic consistency</b> and <b>visual fidelity</b></li>
+      <li>Improves both <b>cross-frame semantic consistency</b></li>
       <li>Easily integrable into existing fine-tuning pipelines</li>
       <li>Outperforms REPA* and vanilla fine-tuning across various datasets and metrics</li>
     </ul>
